@@ -1,11 +1,11 @@
-   streamlit
-   torch
-   paddleocr
-   tensorflow
-   numpy
-   Pillow
-   opencv-python-headless
-   paddlepaddle
-   ultralytics
-   streamlit-webrtc
+streamlit
+torch
+paddleocr
+tensorflow
+numpy
+Pillow
+opencv-python
+paddlepaddle
+ultralytics
+streamlit-webrtc
    
