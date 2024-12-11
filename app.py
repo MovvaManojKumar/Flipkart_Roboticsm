@@ -9,9 +9,9 @@ import re
 from datetime import datetime, timedelta
 
 # Load YOLO models
-brand_model = YOLO('b.pt')  # Ensure the path is correct
+brand_model = YOLO('b.pt')  # Replace 'b.pt' with the correct path to your YOLO model for brands
 ocr = PaddleOCR(lang='en')  # Initialize PaddleOCR
-fruit_model = load_model('DenseNet20_model.h5')  # Ensure the path is correct
+fruit_model = load_model('DenseNet20_model.h5')  # Replace with the correct path to your fruit freshness model
 
 # Class names for freshness detection
 class_names = {
@@ -45,16 +45,11 @@ def preprocess_image(image):
 # Streamlit App
 st.title("Live Detection App")
 
-# Sidebar options with unique keys
+# Sidebar options
 app_mode = st.sidebar.selectbox(
     "Choose the mode",
-    ["Home", "Live Brand & Text Detection", "Live Fruit Freshness Detection"],
-    key="app_mode_selectbox"
+    ["Home", "Live Brand & Text Detection", "Live Fruit Freshness Detection"]
 )
-
-# Initialize session state for camera
-if 'camera_on' not in st.session_state:
-    st.session_state.camera_on = False
 
 if app_mode == "Home":
     st.markdown("""
@@ -66,17 +61,15 @@ if app_mode == "Home":
 
 elif app_mode == "Live Brand & Text Detection":
     st.header("Live Brand & Text Detection")
-    if st.button("Start Detection"):
-        st.session_state.camera_on = True
-    if st.button("Stop Detection"):
-        st.session_state.camera_on = False
+    run_detection = st.button("Start Detection")
+    stop_detection = st.button("Stop Detection")
 
-    if st.session_state.camera_on:
+    if run_detection:
         # Open webcam
         cap = cv2.VideoCapture(0)
         st_frame = st.empty()
 
-        while st.session_state.camera_on:
+        while True:
             ret, frame = cap.read()
             if not ret:
                 break
@@ -114,22 +107,22 @@ elif app_mode == "Live Brand & Text Detection":
 
             # Display the frame
             st_frame.image(cv2.cvtColor(detected_frame, cv2.COLOR_BGR2RGB), channels="RGB")
+            if stop_detection:
+                break
 
         cap.release()
 
 elif app_mode == "Live Fruit Freshness Detection":
     st.header("Live Fruit Freshness Detection")
-    if st.button("Start Detection"):
-        st.session_state.camera_on = True
-    if st.button("Stop Detection"):
-        st.session_state.camera_on = False
+    run_detection = st.button("Start Detection")
+    stop_detection = st.button("Stop Detection")
 
-    if st.session_state.camera_on:
+    if run_detection:
         # Open webcam
         cap = cv2.VideoCapture(0)
         st_frame = st.empty()
 
-        while st.session_state.camera_on:
+        while True:
             ret, frame = cap.read()
             if not ret:
                 break
@@ -147,5 +140,7 @@ elif app_mode == "Live Fruit Freshness Detection":
 
             # Display the frame
             st_frame.image(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB), channels="RGB")
+            if stop_detection:
+                break
 
         cap.release()
